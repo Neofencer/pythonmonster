@@ -58,7 +58,7 @@ class Game:
                         groups=self.all_sprites)
             else:
                 Character(pos=(obj.x,obj.y),
-                        frames=self.overworld_frames['characters']['player'],
+                        frames=self.overworld_frames['characters'][obj.properties['graphic']],
                         groups=self.all_sprites)
 
         #water
