@@ -73,7 +73,7 @@ class Game:
             side=obj.properties['side']
             AnimatedSprite((obj.x,obj.y),self.overworld_frames['coast'][terrain][side],self.all_sprites)
 
-
+    #run the game
     def run(self):
         while True:
             dt=self.clock.tick() /1000
