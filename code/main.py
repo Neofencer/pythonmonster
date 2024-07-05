@@ -95,6 +95,7 @@ class Game:
             for character in self.character_sprites:
                 if check_connection(100,self.player,character):
                     self.player.block()
+                    character.change_facing_direction(self.player.rect.center)
                     print('dialog')
        
     #run the game
