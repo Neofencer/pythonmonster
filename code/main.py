@@ -4,6 +4,8 @@ from sprites import *
 from entities import Player,Character
 from groups import AllSprites
 from support import *
+from game_data import *
+from dialog import*
 
 class Game:
     def __init__(self):
@@ -34,6 +36,7 @@ class Game:
             'characters':all_character_import('graphics','characters')
         }
 
+        self.fonts={'dialog':pygame.font.Font(join('graphics','fonts','PixeloidSans.ttf'),30)}
         
         
     def setup(self,tmx_map,player_start_pos):
@@ -87,7 +90,8 @@ class Game:
                 Character(pos=(obj.x,obj.y),
                         frames=self.overworld_frames['characters'][obj.properties['graphic']],
                         groups=(self.all_sprites,self.collision_sprites,self.character_sprites),
-                        facing_direction=obj.properties['direction'])
+                        facing_direction=obj.properties['direction'],
+                        character_data=TRAINER_DATA[obj.properties['character_id']])
 
     def input(self):
         keys= pygame.key.get_just_pressed()
@@ -96,8 +100,11 @@ class Game:
                 if check_connection(100,self.player,character):
                     self.player.block()
                     character.change_facing_direction(self.player.rect.center)
-                    print('dialog')
-       
+                    self.create_dialog(character)
+
+    def create_dialog(self,character):
+        DialogTree(character,self.player,self.all_sprites,self.fonts['dialog'])
+
     #run the game
     def run(self):
         while True:
