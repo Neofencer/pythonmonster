@@ -24,6 +24,8 @@ class Game:
         self.import_assests()
         self.setup(self.tmx_maps['world'],'house')
 
+        self.dialog_tree=None
+
     def import_assests(self):
         self.tmx_maps={'world':load_pygame(join('data','maps','world.tmx')),
                        'hospital':load_pygame(join('data','maps','hospital.tmx'))
@@ -94,16 +96,18 @@ class Game:
                         character_data=TRAINER_DATA[obj.properties['character_id']])
 
     def input(self):
-        keys= pygame.key.get_just_pressed()
-        if keys[pygame.K_SPACE]:
-            for character in self.character_sprites:
-                if check_connection(100,self.player,character):
-                    self.player.block()
-                    character.change_facing_direction(self.player.rect.center)
-                    self.create_dialog(character)
+        if not self.dialog_tree:
+            keys= pygame.key.get_just_pressed()
+            if keys[pygame.K_SPACE]:
+                for character in self.character_sprites:
+                    if check_connection(100,self.player,character):
+                        self.player.block()
+                        character.change_facing_direction(self.player.rect.center)
+                        self.create_dialog(character)
 
     def create_dialog(self,character):
-        DialogTree(character,self.player,self.all_sprites,self.fonts['dialog'])
+        if not self.dialog_tree:
+            self.dialog_tree=DialogTree(character,self.player,self.all_sprites,self.fonts['dialog'])
 
     #run the game
     def run(self):
@@ -121,6 +125,9 @@ class Game:
             self.all_sprites.update(dt)
             self.display_surface.fill('black')
             self.all_sprites.draw(self.player.rect.center)
+
+            #overlays
+            if self.dialog_tree:self.dialog_tree.update()
             
             pygame.display.update()
 
