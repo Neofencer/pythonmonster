@@ -6,6 +6,8 @@ from groups import AllSprites
 from support import *
 from game_data import *
 from dialog import*
+from monster import Monster
+from monster_index import MonsterIndex
 
 class Game:
     #general 
@@ -14,6 +16,18 @@ class Game:
         self.display_surface=pygame.display.set_mode(( WINDOW_WIDTH,WINDOW_HEIGHT))
         pygame.display.set_caption('Monster Hunter')
         self.clock=pygame.time.Clock()
+
+        #player monsters
+        self.player_monsters={
+            0:Monster('Charmadillo',30),
+            1:Monster('Friolera',29),
+            2:Monster('Larvea',3),
+            3:Monster('Atrox',24),
+            4:Monster('Sparchu',24),
+            5:Monster('Gulfin', 24),
+			6:Monster('Jacana', 2),
+			7:Monster('Pouch', 3)
+        }
 
         #groups
         self.all_sprites=AllSprites()
@@ -32,7 +46,11 @@ class Game:
         self.import_assests()
         self.setup(self.tmx_maps['world'],'house')
 
+        
+        #overlays
         self.dialog_tree=None
+        self.monster_index=MonsterIndex(self.player_monsters,self.fonts)
+        self.index_open = False
 
 
     def import_assests(self):
@@ -44,7 +62,10 @@ class Game:
             'characters':all_character_import('graphics','characters')
         }
 
-        self.fonts={'dialog':pygame.font.Font(join('graphics','fonts','PixeloidSans.ttf'),30)}
+        self.fonts={'dialog':pygame.font.Font(join('graphics','fonts','PixeloidSans.ttf'),30),
+                    'regular':pygame.font.Font(join('graphics','fonts','PixeloidSans.ttf'),18),
+                    'small':pygame.font.Font(join('graphics','fonts','PixeloidSans.ttf'),14),
+                    'bold':pygame.font.Font(join('graphics','fonts','dogicapixelbold.otf'),20)}
         
         
     def setup(self,tmx_map,player_start_pos):
@@ -124,6 +145,10 @@ class Game:
                         character.change_facing_direction(self.player.rect.center)
                         self.create_dialog(character)
                         character.can_rotate=False
+            if keys[pygame.K_RETURN]:
+                self.index_open=not self.index_open
+                self.player.blocked=not self.player.blocked
+
 
     def create_dialog(self,character):
         if not self.dialog_tree:
@@ -182,6 +207,7 @@ class Game:
 
             #overlays
             if self.dialog_tree:self.dialog_tree.update()
+            if self.index_open:self.monster_index.update(dt)
             
 
             self.tint_screen(dt)
