@@ -190,7 +190,7 @@ class MonsterIndex:
         info_height= rect.bottom-healthbar_rect.bottom
 
         # stats
-        stats_rect=pygame.FRect(sides['left'],healthbar_rect.bottom,healthbar_rect.width,info_height).inflate(0,-60)
+        stats_rect=pygame.FRect(sides['left'],healthbar_rect.bottom,healthbar_rect.width,info_height).inflate(0,-60).move(0,15)
         stats_text_surf = self.fonts['regular'].render('Stats',False,COLORS['white'])
         stats_text_rect=stats_text_surf.get_frect(bottomleft=stats_rect.topleft)
         self.display_surface.blit(stats_text_surf,stats_text_rect)
@@ -216,6 +216,11 @@ class MonsterIndex:
             draw_bar(surface=self.display_surface,rect=bar_rect,value=value,max_value=self.max_stats[stat]*monster.level,color=COLORS['white'],bg_color=COLORS['black'],radius=1)
 
         # abilities
+        ability_rect=stats_rect.copy().move_to(left=sides['right'])
+        ability_text_surf = self.fonts['regular'].render('Ability',False,COLORS['white'])
+        ability_text_rect=ability_text_surf.get_frect(bottomleft=ability_rect.topleft)
+        self.display_surface.blit(ability_text_surf,ability_text_rect)
+
 
 
 
