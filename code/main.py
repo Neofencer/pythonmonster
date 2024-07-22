@@ -64,7 +64,8 @@ class Game:
 
         self.monster_frames ={
             'icons':import_folder_dict('graphics','icons'),
-            'monsters':monster_importer(4,2,'graphics','monsters')
+            'monsters':monster_importer(4,2,'graphics','monsters'),
+            'ui':import_folder_dict('graphics','ui')
         }
         
         self.fonts={'dialog':pygame.font.Font(join('graphics','fonts','PixeloidSans.ttf'),30),
