@@ -1,5 +1,7 @@
 from settings import *
 
+#overworld sprites
+
 class Sprite(pygame.sprite.Sprite):
     def __init__(self,pos,surf,groups,z=WORLD_LAYERS['main']):
         super().__init__(groups)
@@ -32,6 +34,7 @@ class MonsterPatchSprite(Sprite):
         self.y_sort -=40
 
 class AnimatedSprite(Sprite):
+
     def __init__(self,pos,frames,groups,z=WORLD_LAYERS['main']):
         self.frame_index, self.frames=0,frames
         super().__init__(pos,frames[self.frame_index],groups,z)
@@ -44,3 +47,20 @@ class AnimatedSprite(Sprite):
 
     def update(self,dt):
         self.animate(dt)
+
+
+#battle sprite
+
+class MonsterSprite(pygame.sprite.Sprite):
+    def __init__(self,pos,frames,groups,monster,index,pos_index,entity):
+        super().__init__(groups)
+        #data
+        self.index=index
+        self.pos_index=pos_index
+        self.entity=entity
+        self.monster=monster
+        self.frame_index,self.frames,self.state=0,frames,'idle'
+
+        #sprite setup
+        self.image = self.frames[self.state][self.frame_index]
+        self.rect=self.image.get_frect(center=pos)
