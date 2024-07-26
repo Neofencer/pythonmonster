@@ -1,4 +1,5 @@
 from settings import *
+from random import uniform
 
 #overworld sprites
 
@@ -49,7 +50,7 @@ class AnimatedSprite(Sprite):
         self.animate(dt)
 
 
-#battle sprite
+#battle sprite display and animate sprite
 
 class MonsterSprite(pygame.sprite.Sprite):
     def __init__(self,pos,frames,groups,monster,index,pos_index,entity):
@@ -60,7 +61,41 @@ class MonsterSprite(pygame.sprite.Sprite):
         self.entity=entity
         self.monster=monster
         self.frame_index,self.frames,self.state=0,frames,'idle'
+        self.animation_speed = ANIMATION_SPEED + uniform(-1,1)
 
         #sprite setup
         self.image = self.frames[self.state][self.frame_index]
         self.rect=self.image.get_frect(center=pos)
+
+    def animate(self,dt):
+        self.frame_index +=self.animation_speed*dt
+        self.image=self.frames[self.state][int(self.frame_index)%len(self.frames[self.state])]
+
+    def update(self,dt):
+        self.animate(dt)
+
+class MonsterNameSprite(pygame.sprite.Sprite):
+
+    def __init__(self,pos,monster_sprite,groups,font):
+        super().__init__(groups)
+        self.monster_sprite=monster_sprite
+        text_surf=font.render(monster_sprite.monster.name,False,COLORS['black'])
+        padding=10
+
+        
+        self.image= pygame.Surface((text_surf.get_width()+2*padding,text_surf.get_height()+2*padding))
+        self.image.fill(COLORS['white'])
+        self.image.blit(text_surf,(padding,padding))
+        self.rect=self.image.get_frect(midtop=pos)
+
+
+class MonsterLevelSprite(pygame.sprite.Sprite):
+    def __init__(self,entity,pos,monster_sprite,groups,font):
+        super().__init__(groups)
+        self.monster_sprite=monster_sprite
+        self.font=font
+        self.image=pygame.Surface((60,26))
+        self.rect=self.image.get_frect(topleft=pos) if entity =='player' else self.image.get_frect(topright=pos)
+
+    def update(self,_):
+        self.image.fill(COLORS['white'])
