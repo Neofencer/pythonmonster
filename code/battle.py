@@ -1,5 +1,6 @@
 from settings import *
-from sprites import MonsterSprite, MonsterNameSprite,MonsterLevelSprite
+from sprites import MonsterSprite, MonsterNameSprite,MonsterLevelSprite,MonsterStatsSprite
+from groups import BattleSprites
 
 class Battle:
     def __init__(self,player_monsters,opponent_monsters,monster_frames,bg_surf,fonts):
@@ -12,7 +13,7 @@ class Battle:
         
         
         #groups
-        self.battle_sprites=pygame.sprite.Group()
+        self.battle_sprites=BattleSprites()
         self.player_sprites=pygame.sprite.Group()
         self.opponent_sprites=pygame.sprite.Group()
         
@@ -42,12 +43,12 @@ class Battle:
         name_sprite=MonsterNameSprite(pos=name_pos,monster_sprite=monster_sprite,groups=self.battle_sprites,font=self.fonts['regular'])
         level_pos=name_sprite.rect.bottomleft if entity=='player' else name_sprite.rect.bottomright
         MonsterLevelSprite(entity,pos=level_pos,monster_sprite=monster_sprite,groups=self.battle_sprites,font=self.fonts['small'])
-        # MonsterStatsSprite
+        MonsterStatsSprite(monster_sprite.rect.midbottom + vector(0,60),monster_sprite,(150,48),self.battle_sprites,self.fonts['small'])
 
 
 
     def update(self,dt):
         self.display_surface.blit(self.bg_surf,(0,0))
         self.battle_sprites.update(dt)
-        self.battle_sprites.draw(self.display_surface)
+        self.battle_sprites.draw()
 
